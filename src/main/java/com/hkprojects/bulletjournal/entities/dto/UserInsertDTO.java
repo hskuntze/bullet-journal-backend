@@ -7,6 +7,7 @@ public class UserInsertDTO extends UserDTO{
 	private static final long serialVersionUID = 1L;
 	
 	private String password;
+	private boolean enabled;
 	
 	public UserInsertDTO() {
 		super();
@@ -18,5 +19,13 @@ public class UserInsertDTO extends UserDTO{
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }

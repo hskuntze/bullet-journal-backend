@@ -1,12 +1,15 @@
 package com.hkprojects.bulletjournal.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,11 +18,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.hkprojects.bulletjournal.entities.dto.UserDTO;
 
 @Entity
 @Table(name = "tb_user")
@@ -38,15 +44,31 @@ public class User implements Serializable, UserDetails{
 				joinColumns = @JoinColumn(name = "user_id"),
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
+
+	@OneToMany(mappedBy = "user")
+	private List<Todo> todos = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "user")
+	private List<Card> cards = new ArrayList<>();
+	
+	@Column(name = "enabled")
+	private boolean enabled;
 	
 	public User() {
 	}
 
-	public User(Long id, String username, String email, String password) {
+	public User(Long id, String username, String email, String password, boolean enabled) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
+	}
+	
+	public User(UserDTO dto) {
+		username = dto.getUsername();
+		email = dto.getEmail();
+		enabled = dto.isEnabled();
+		dto.getRoles().forEach(role -> roles.add(new Role(role)));
 	}
 
 	public Long getId() {
@@ -81,6 +103,18 @@ public class User implements Serializable, UserDetails{
 		this.password = password;
 	}
 	
+	public List<Todo> getTodos() {
+		return todos;
+	}
+
+	public List<Card> getCards() {
+		return cards;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public Set<Role> getRoles() {
 		return roles;
 	}

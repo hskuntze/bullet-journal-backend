@@ -13,6 +13,7 @@ public class UserDTO implements Serializable{
 	private Long id;
 	private String username;
 	private String email;
+	private boolean enabled;
 	
 	private Set<RoleDTO> roles = new HashSet<>();
 	
@@ -71,5 +72,13 @@ public class UserDTO implements Serializable{
 
 	public void setRoles(Set<RoleDTO> roles) {
 		this.roles = roles;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }
