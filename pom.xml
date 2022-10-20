@@ -12,7 +12,7 @@
 	<groupId>com.hkprojects</groupId>
 	<artifactId>bullet-journal</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ToDo</name>
+	<name>bullet-journal</name>
 	<description>Personal project. Study case for the creation of a backend API for a bullet journal.</description>
 	<properties>
 		<java.version>11</java.version>

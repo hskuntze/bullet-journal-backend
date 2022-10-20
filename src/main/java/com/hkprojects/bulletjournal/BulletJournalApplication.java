@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ToDoApplication {
+public class BulletJournalApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ToDoApplication.class, args);
+		SpringApplication.run(BulletJournalApplication.class, args);
 	}
 
 }

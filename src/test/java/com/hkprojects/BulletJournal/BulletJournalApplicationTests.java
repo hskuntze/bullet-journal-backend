@@ -1,10 +1,10 @@
-package com.hkprojects.ToDo;
+package com.hkprojects.BulletJournal;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ToDoApplicationTests {
+class BulletJournalApplicationTests {
 
 	@Test
 	void contextLoads() {
