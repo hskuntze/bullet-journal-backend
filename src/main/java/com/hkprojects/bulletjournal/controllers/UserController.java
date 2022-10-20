@@ -1,10 +1,12 @@
 package com.hkprojects.bulletjournal.controllers;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -46,14 +48,15 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO obj, HttpServletRequest request, Errors errors){
+	public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO obj, HttpServletRequest request, Errors errors) throws MalformedURLException{
 		try {
 			UserDTO user = service.register(obj);
 			URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 					.path("/{id}")
 					.buildAndExpand(user.getId())
 					.toUri();
-			String appUrl = request.getContextPath();
+			String aux = request.getRequestURL().toString();
+			String appUrl = aux.substring(0, StringUtils.ordinalIndexOf(aux, "/", 3));
 			eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl));
 			return ResponseEntity.created(uri).body(user);
 		} catch (UserAlreadyExistsException e) {
