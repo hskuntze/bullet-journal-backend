@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,9 +27,16 @@ public class CardController {
 	@Autowired
 	private CardService service;
 	
+//	@GetMapping
+//	public ResponseEntity<Page<CardDTO>> findAll(Pageable pageable){
+//		return ResponseEntity.ok().body(service.findAll(pageable));
+//	}
+	
 	@GetMapping
-	public ResponseEntity<Page<CardDTO>> findAll(Pageable pageable){
-		return ResponseEntity.ok().body(service.findAll(pageable));
+	public ResponseEntity<Page<CardDTO>> findAll(Pageable pageable,
+			@RequestParam(value = "title", defaultValue="") String title){
+		Page<CardDTO> page = service.findAllWithFilters(pageable, title);
+		return ResponseEntity.ok().body(page);
 	}
 	
 	@GetMapping(value = "/{id}")

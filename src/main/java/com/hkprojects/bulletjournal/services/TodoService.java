@@ -36,9 +36,9 @@ public class TodoService {
 	}
 	
 	@Transactional(readOnly = true)
-	public Page<TodoDTO> findAllWithFilters(Pageable pageable, String name, String priority){
+	public Page<TodoDTO> findAllWithFilters(Pageable pageable, String title, String priority){
 		String username = authService.authenticated().getUsername();
-		Page<Todo> all = repository.findByUsernameWithFilters(name, priority, username, pageable);
+		Page<Todo> all = repository.findByUsernameWithFilters(title, priority, username, pageable);
 		return all.map(x -> new TodoDTO(x));
 	}
 	
@@ -64,7 +64,7 @@ public class TodoService {
 			todo = repository.save(todo);
 			return new TodoDTO(todo);
 		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Entidade: "+this.getClass()+". Não foi possível encontrar o objeto com id "+id+". Mais informações: "+e.getMessage());
+			throw new ResourceNotFoundException("Não foi possível encontrar um Todo com id "+id+". Mais informações: "+e.getMessage());
 		}
 	}
 	

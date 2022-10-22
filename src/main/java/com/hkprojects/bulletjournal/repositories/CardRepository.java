@@ -12,4 +12,9 @@ import com.hkprojects.bulletjournal.entities.Card;
 public interface CardRepository extends JpaRepository<Card, Long>{
 	@Query("FROM Card c WHERE c.user.username = :username")
 	Page<Card> findByUsername(String username, Pageable pageable);
+	
+	@Query("SELECT DISTINCT obj FROM Card obj "+
+			" WHERE (LOWER(obj.title) LIKE LOWER(CONCAT('%',:title,'%'))) "
+			+ " AND obj.user.username = :username")
+	Page<Card> findByUsernameWithFilters(String username, String title, Pageable pageable);
 }

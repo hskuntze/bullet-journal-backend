@@ -19,20 +19,28 @@ import com.hkprojects.bulletjournal.services.exceptions.ResourceNotFoundExceptio
 
 @Service
 public class CardService {
+	
 	@Autowired
 	private CardRepository repository;
 	
 	@Autowired
-	private AuthService authService;
+	private UserRepository userRepository;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private AuthService authService;
 	
 	@Transactional(readOnly = true)
 	public Page<CardDTO> findAll(Pageable pageable){
 		User user = authService.authenticated();
 		Page<Card> page = repository.findByUsername(user.getUsername(), pageable);
 		return page.map(x -> new CardDTO(x));
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<CardDTO> findAllWithFilters(Pageable pageable, String title){
+		String username = authService.authenticated().getUsername();
+		Page<Card> all = repository.findByUsernameWithFilters(username, title, pageable);
+		return all.map(x -> new CardDTO(x));
 	}
 	
 	@Transactional(readOnly = true)
@@ -57,7 +65,7 @@ public class CardService {
 			obj = repository.save(obj);
 			return new CardDTO(obj);
 		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Não foi possível localizar um objeto do tipo "+this.getClass()+" com ID "+id+". Mais informações: "+e.getMessage());
+			throw new ResourceNotFoundException("Não foi possível encontrar um Card com id "+id+". Mais informações: "+e.getMessage());
 		}
 	}
 	
