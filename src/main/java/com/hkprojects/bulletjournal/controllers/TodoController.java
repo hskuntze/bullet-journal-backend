@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,9 +26,17 @@ public class TodoController {
 	@Autowired
 	private TodoService service;
 	
+//	@GetMapping
+//	public ResponseEntity<Page<TodoDTO>> findAll(Pageable pageable){
+//		return ResponseEntity.ok().body(service.findAll(pageable));
+//	}
+	
 	@GetMapping
-	public ResponseEntity<Page<TodoDTO>> findAll(Pageable pageable){
-		return ResponseEntity.ok().body(service.findAll(pageable));
+	public ResponseEntity<Page<TodoDTO>> findAll(Pageable pageable,
+			@RequestParam(value = "title", defaultValue="") String title,
+			@RequestParam(value = "priority", defaultValue="") String priority){
+		Page<TodoDTO> page = service.findAllWithFilters(pageable, title, priority);
+		return ResponseEntity.ok().body(page);
 	}
 	
 	@GetMapping(value = "/{id}")

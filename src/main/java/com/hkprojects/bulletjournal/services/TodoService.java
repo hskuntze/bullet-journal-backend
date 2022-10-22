@@ -36,6 +36,13 @@ public class TodoService {
 	}
 	
 	@Transactional(readOnly = true)
+	public Page<TodoDTO> findAllWithFilters(Pageable pageable, String name, String priority){
+		String username = authService.authenticated().getUsername();
+		Page<Todo> all = repository.findByUsernameWithFilters(name, priority, username, pageable);
+		return all.map(x -> new TodoDTO(x));
+	}
+	
+	@Transactional(readOnly = true)
 	public TodoDTO findById(Long id) {
 		Optional<Todo> obj = repository.findById(id);
 		return new TodoDTO(obj.get());
