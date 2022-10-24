@@ -51,6 +51,9 @@ public class User implements Serializable, UserDetails{
 	@OneToMany(mappedBy = "user")
 	private List<Card> cards = new ArrayList<>();
 	
+	@OneToMany(mappedBy = "user")
+	private List<Streak> streaks = new ArrayList<>();
+	
 	@Column(name = "enabled")
 	private boolean enabled;
 	
