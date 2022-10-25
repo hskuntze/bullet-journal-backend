@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,8 +59,7 @@ public class UserController {
 			eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl));
 			return ResponseEntity.created(uri).body(user);
 		} catch (UserAlreadyExistsException e) {
-			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			throw new UserAlreadyExistsException("Nome de usuário e/ou e-mail já existem.");
 		}
 	}
 	

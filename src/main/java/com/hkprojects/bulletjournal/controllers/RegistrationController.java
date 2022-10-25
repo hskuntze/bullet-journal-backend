@@ -24,7 +24,6 @@ public class RegistrationController {
 	
 	@GetMapping(value = "/confirm")
 	public String cofirmRegistration(WebRequest request, @RequestParam("token") String token) throws InvalidTokenException {
-		
 		VerificationToken verificationToken = service.getVerificationToken(token);
 		if(verificationToken == null) {
 			throw new InvalidTokenException("Token inválido ou inexistente.");

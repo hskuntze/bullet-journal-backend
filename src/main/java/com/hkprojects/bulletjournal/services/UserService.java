@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,8 @@ import com.hkprojects.bulletjournal.entities.dto.UserInsertDTO;
 import com.hkprojects.bulletjournal.repositories.RoleRepository;
 import com.hkprojects.bulletjournal.repositories.UserRepository;
 import com.hkprojects.bulletjournal.repositories.VerificationTokenRepository;
+import com.hkprojects.bulletjournal.services.exceptions.DatabaseException;
+import com.hkprojects.bulletjournal.services.exceptions.RestrictedUsernameException;
 import com.hkprojects.bulletjournal.services.exceptions.UserAlreadyExistsException;
 
 @Service
@@ -52,7 +55,11 @@ public class UserService implements UserDetailsService {
 	public UserDTO register(UserInsertDTO obj) {
 		if(repository.findByEmail(obj.getEmail()) != null || repository.findByUsername(obj.getUsername()) != null) {
 			throw new UserAlreadyExistsException("Usuário com este e-mail e/ou nome de usuário já existe!");
-		} else {
+		} 
+		if(obj.getUsername().toLowerCase().equals("admin")) {
+			throw new RestrictedUsernameException("Este nome de usuário é restrito");
+		}
+		else {
 			User user = new User();
 			dtoToEntity(obj, user);
 			user.setPassword(encoder.encode(obj.getPassword()));
@@ -76,7 +83,11 @@ public class UserService implements UserDetailsService {
 	}
 
 	public void deleteById(Long id) {
-		repository.deleteById(id);
+		try {
+			repository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException("Erro na base de dados");
+		}
 	}
 
 	@Override

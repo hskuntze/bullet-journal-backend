@@ -13,4 +13,9 @@ public interface StreakRepository extends JpaRepository<Streak, Long>{
 	
 	@Query("FROM Streak s WHERE s.user.username = :username")
 	Page<Streak> findByUsername(String username, Pageable pageable);
+	
+	@Query("SELECT DISTINCT obj FROM Streak obj "+
+			" WHERE (LOWER(obj.title) LIKE LOWER(CONCAT('%',:title,'%'))) "
+			+ " AND obj.user.username = :username")
+	Page<Streak> findByUsernameWithFilters(String title, String username, Pageable pageable);
 }

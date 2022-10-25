@@ -37,6 +37,13 @@ public class StreakService {
 	}
 	
 	@Transactional(readOnly = true)
+	public Page<StreakDTO> findAllWithFilters(String title, Pageable pageable){
+		String username = authService.authenticated().getUsername();
+		Page<Streak> page = repository.findByUsernameWithFilters(title, username, pageable);
+		return page.map(x -> new StreakDTO(x));
+	}
+	
+	@Transactional(readOnly = true)
 	public StreakDTO findById(Long id) {
 		Optional<Streak> obj = repository.findById(id);
 		return new StreakDTO(obj.get());
