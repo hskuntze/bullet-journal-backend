@@ -20,8 +20,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.hkprojects.bulletjournal.entities.dto.StreakDTO;
 import com.hkprojects.bulletjournal.services.StreakService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping(value = "/streaks")
+@SecurityRequirement(name = "thebulletjournal-doc-scheme")
 public class StreakController {
 	
 	@Autowired
@@ -33,6 +37,7 @@ public class StreakController {
 //	}
 	
 	@GetMapping
+	@Operation(tags = {"/streaks"})
 	public ResponseEntity<Page<StreakDTO>> findAll(Pageable pageable,
 			@RequestParam(value = "title", defaultValue="") String title){
 		Page<StreakDTO> page = service.findAllWithFilters(title, pageable);
@@ -40,11 +45,13 @@ public class StreakController {
 	}
 	
 	@GetMapping(value = "/{id}")
+	@Operation(tags = {"/streaks"})
 	public ResponseEntity<StreakDTO> findById(@PathVariable Long id){
 		return ResponseEntity.ok().body(service.findById(id));
 	}
 	
 	@PostMapping
+	@Operation(tags = {"/streaks"})
 	public ResponseEntity<StreakDTO> insert(@RequestBody StreakDTO dto){
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		dto = service.insert(dto);
@@ -52,11 +59,13 @@ public class StreakController {
 	}
 	
 	@PutMapping(value = "/{id}")
+	@Operation(tags = {"/streaks"})
 	public ResponseEntity<StreakDTO> update(@PathVariable Long id, @RequestBody StreakDTO dto){
 		return ResponseEntity.ok().body(service.update(id, dto));
 	}
 	
 	@DeleteMapping(value = "/{id}")
+	@Operation(tags = {"/streaks"})
 	public ResponseEntity<Void> delete(@PathVariable Long id){
 		service.delete(id);
 		return ResponseEntity.noContent().build();

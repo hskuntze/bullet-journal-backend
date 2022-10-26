@@ -29,8 +29,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Autowired
 	private JwtTokenStore store;
 	
-	private static final String[] PUBLIC = {"/oauth/token", "/h2-console/**",};
-	private static final String[] REGISTER = {"/users/**"};
+	private static final String[] SWAGGER = {"/swagger-ui/**", "/thebulletjournal-openapi/**"};
+	private static final String[] PUBLIC = {"/oauth/token", "/h2-console/**"};
+	private static final String[] REGISTER = {"/users"};
+	private static final String[] USERS = {"/users/**"};
 	private static final String[] CONFIRMATION = {"/registration/**"};
 
 	@Override
@@ -45,8 +47,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		}
 		
 		http.authorizeRequests()
+			.antMatchers(SWAGGER).permitAll()
 			.antMatchers(PUBLIC).permitAll()
 			.antMatchers(HttpMethod.POST, REGISTER).permitAll()
+			.antMatchers(USERS).hasRole("ADMIN")
 			.antMatchers(CONFIRMATION).permitAll()
 			.anyRequest().authenticated();
 		

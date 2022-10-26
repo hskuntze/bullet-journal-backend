@@ -15,14 +15,19 @@ import com.hkprojects.bulletjournal.entities.VerificationToken;
 import com.hkprojects.bulletjournal.entities.dto.UserInsertDTO;
 import com.hkprojects.bulletjournal.services.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping(value = "/registration")
+@SecurityRequirement(name = "thebulletjournal-doc-scheme")
 public class RegistrationController {
 	
 	@Autowired
 	private UserService service;
 	
 	@GetMapping(value = "/confirm")
+	@Operation(tags = {"/registration"})
 	public String cofirmRegistration(WebRequest request, @RequestParam("token") String token) throws InvalidTokenException {
 		VerificationToken verificationToken = service.getVerificationToken(token);
 		if(verificationToken == null) {

@@ -26,33 +26,41 @@ import com.hkprojects.bulletjournal.entities.dto.UserInsertDTO;
 import com.hkprojects.bulletjournal.services.UserService;
 import com.hkprojects.bulletjournal.services.exceptions.UserAlreadyExistsException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {
-	
+
 	@Autowired
 	private UserService service;
-	
+
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
-	
+
 	@GetMapping
-	public ResponseEntity<List<UserDTO>> findAll(){
+	@SecurityRequirement(name = "thebulletjournal-doc-scheme")
+	@Operation(tags = { "/users" })
+	public ResponseEntity<List<UserDTO>> findAll() {
 		return ResponseEntity.ok().body(service.findAll());
 	}
-	
+
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> findById(@PathVariable Long id){
+	@SecurityRequirement(name = "thebulletjournal-doc-scheme")
+	@Operation(tags = { "/users" })
+	public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
 		return ResponseEntity.ok().body(service.findById(id));
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO obj, HttpServletRequest request, Errors errors) throws MalformedURLException{
+	@Operation(tags = {
+			"/users" }, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true))
+	public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO obj, HttpServletRequest request, Errors errors)
+			throws MalformedURLException {
 		try {
 			UserDTO user = service.register(obj);
-			URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-					.path("/{id}")
-					.buildAndExpand(user.getId())
+			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId())
 					.toUri();
 			String aux = request.getRequestURL().toString();
 			String appUrl = aux.substring(0, StringUtils.ordinalIndexOf(aux, "/", 3));
@@ -62,9 +70,11 @@ public class UserController {
 			throw new UserAlreadyExistsException("Nome de usuário e/ou e-mail já existem.");
 		}
 	}
-	
+
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id){
+	@SecurityRequirement(name = "thebulletjournal-doc-scheme")
+	@Operation(tags = { "/users" })
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}

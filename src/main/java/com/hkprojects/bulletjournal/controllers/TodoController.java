@@ -20,8 +20,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.hkprojects.bulletjournal.entities.dto.TodoDTO;
 import com.hkprojects.bulletjournal.services.TodoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping(value = "/todos")
+@SecurityRequirement(name = "thebulletjournal-doc-scheme")
 public class TodoController {
 	@Autowired
 	private TodoService service;
@@ -32,6 +36,7 @@ public class TodoController {
 //	}
 	
 	@GetMapping
+	@Operation(tags = {"/todos"})
 	public ResponseEntity<Page<TodoDTO>> findAll(Pageable pageable,
 			@RequestParam(value = "title", defaultValue="") String title,
 			@RequestParam(value = "priority", defaultValue="") String priority){
@@ -40,22 +45,26 @@ public class TodoController {
 	}
 	
 	@GetMapping(value = "/{id}")
+	@Operation(tags = {"/todos"})
 	public ResponseEntity<TodoDTO> findById(@PathVariable Long id){
 		return ResponseEntity.ok().body(service.findById(id));
 	}
 	
 	@PostMapping
+	@Operation(tags = {"/todos"})
 	public ResponseEntity<TodoDTO> insert(@RequestBody TodoDTO dto){
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(service.insert(dto));
 	}
 	
 	@PutMapping(value = "/{id}")
+	@Operation(tags = {"/todos"})
 	public ResponseEntity<TodoDTO> update(@PathVariable Long id, @RequestBody TodoDTO dto){
 		return ResponseEntity.ok().body(service.update(id, dto));
 	}
 	
 	@DeleteMapping(value = "/{id}")
+	@Operation(tags = {"/todos"})
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();

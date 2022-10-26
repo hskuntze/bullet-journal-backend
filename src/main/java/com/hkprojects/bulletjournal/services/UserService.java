@@ -1,6 +1,7 @@
 package com.hkprojects.bulletjournal.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.hkprojects.bulletjournal.repositories.RoleRepository;
 import com.hkprojects.bulletjournal.repositories.UserRepository;
 import com.hkprojects.bulletjournal.repositories.VerificationTokenRepository;
 import com.hkprojects.bulletjournal.services.exceptions.DatabaseException;
+import com.hkprojects.bulletjournal.services.exceptions.ResourceNotFoundException;
 import com.hkprojects.bulletjournal.services.exceptions.RestrictedUsernameException;
 import com.hkprojects.bulletjournal.services.exceptions.UserAlreadyExistsException;
 
@@ -48,7 +50,9 @@ public class UserService implements UserDetailsService {
 
 	@Transactional(readOnly = true)
 	public UserDTO findById(Long id) {
-		return new UserDTO(repository.findById(id).get());
+		Optional<User> obj = repository.findById(id);
+		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário com id "+id+" não foi localizado."));
+		return new UserDTO(user);
 	}
 
 	@Transactional
@@ -93,7 +97,7 @@ public class UserService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = repository.findByUsername(username);
-
+		
 		if (user == null) {
 			throw new UsernameNotFoundException(username + " not found!!");
 		}
