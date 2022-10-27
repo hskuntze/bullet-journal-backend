@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,8 @@ public class TodoService {
 	@Transactional(readOnly = true)
 	public TodoDTO findById(Long id) {
 		Optional<Todo> obj = repository.findById(id);
-		return new TodoDTO(obj.get());
+		Todo todo = obj.orElseThrow(() -> new ResourceNotFoundException("Todo de id "+id+" não foi localizado."));
+		return new TodoDTO(todo);
 	}
 	
 	@Transactional
@@ -69,7 +71,11 @@ public class TodoService {
 	}
 	
 	public void delete(Long id) {
-		repository.deleteById(id);
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Não foi possível localizar um objeto Todo com id"+id);
+		}
 	}
 	
 	private void dtoToEntity(Todo entity, TodoDTO dto) {

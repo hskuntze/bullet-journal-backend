@@ -18,9 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.hkprojects.bulletjournal.entities.dto.CardDTO;
+import com.hkprojects.bulletjournal.entities.swagger.CardSchema;
 import com.hkprojects.bulletjournal.services.CardService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
@@ -37,7 +41,8 @@ public class CardController {
 //	}
 
 	@GetMapping
-	@Operation(tags = { "/cards" })
+	@Operation(tags = { "/cards" }, parameters = {
+			@Parameter(name = "title", description = "Título para filtrar objetos Card.", example = "Dia 08/10") })
 	public ResponseEntity<Page<CardDTO>> findAll(Pageable pageable,
 			@RequestParam(value = "title", defaultValue = "") String title) {
 		Page<CardDTO> page = service.findAllWithFilters(pageable, title);
@@ -45,14 +50,15 @@ public class CardController {
 	}
 
 	@GetMapping(value = "/{id}")
-	@Operation(tags = { "/cards" })
+	@Operation(tags = { "/cards" }, parameters = {
+			@Parameter(name = "id", description = "Id de um objeto Card", example = "2") })
 	public ResponseEntity<CardDTO> findById(@PathVariable Long id) {
 		return ResponseEntity.ok().body(service.findById(id));
 	}
 
 	@PostMapping
-	@Operation(tags = {
-			"/cards" }, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Operação de registro de um card no aplicativo.", required = true))
+	@Operation(tags = { "/cards" }, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {
+			@Content(schema = @Schema(implementation = CardSchema.class)) }, description = "Operação de registro de um card no aplicativo.", required = true))
 	public ResponseEntity<CardDTO> insert(@RequestBody CardDTO dto) {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		dto = service.insert(dto);
@@ -60,14 +66,16 @@ public class CardController {
 	}
 
 	@PutMapping(value = "/{id}")
-	@Operation(tags = {
-			"/cards" }, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Operação de atualização de um card no aplicativo.", required = true))
+	@Operation(tags = { "/cards" }, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {
+			@Content(schema = @Schema(implementation = CardSchema.class)) }, description = "Operação de atualização de um card no aplicativo.", required = true), parameters = {
+					@Parameter(name = "id", description = "Id de um objeto Card", example = "3") })
 	public ResponseEntity<CardDTO> update(@PathVariable Long id, @RequestBody CardDTO dto) {
 		return ResponseEntity.ok().body(service.update(id, dto));
 	}
 
 	@DeleteMapping(value = "/{id}")
-	@Operation(tags = { "/cards" })
+	@Operation(tags = { "/cards" }, parameters = {
+			@Parameter(name = "id", description = "Id de um objeto Card", example = "2") })
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();

@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,8 @@ public class StreakService {
 	@Transactional(readOnly = true)
 	public StreakDTO findById(Long id) {
 		Optional<Streak> obj = repository.findById(id);
-		return new StreakDTO(obj.get());
+		Streak streak = obj.orElseThrow(() -> new ResourceNotFoundException("Streak de id "+id+" não foi localizado."));
+		return new StreakDTO(streak);
 	}
 	
 	@Transactional
@@ -70,7 +72,11 @@ public class StreakService {
 	}
 	
 	public void delete(Long id) {
-		repository.deleteById(id);
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Não foi possível localizar um objeto Streak com id "+id);
+		}
 	}
 	
 	private void dtoToEntity(StreakDTO dto, Streak entity) {

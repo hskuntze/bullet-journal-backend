@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +20,6 @@ import com.hkprojects.bulletjournal.entities.VerificationToken;
 import com.hkprojects.bulletjournal.entities.dto.RoleDTO;
 import com.hkprojects.bulletjournal.entities.dto.UserDTO;
 import com.hkprojects.bulletjournal.entities.dto.UserInsertDTO;
-import com.hkprojects.bulletjournal.repositories.RoleRepository;
 import com.hkprojects.bulletjournal.repositories.UserRepository;
 import com.hkprojects.bulletjournal.repositories.VerificationTokenRepository;
 import com.hkprojects.bulletjournal.services.exceptions.DatabaseException;
@@ -34,7 +34,7 @@ public class UserService implements UserDetailsService {
 	private UserRepository repository;
 
 	@Autowired
-	private RoleRepository roleRepo;
+	private RoleService roleService;
 	
 	@Autowired
 	private VerificationTokenRepository tokenRepo;
@@ -91,6 +91,8 @@ public class UserService implements UserDetailsService {
 			repository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Erro na base de dados");
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Não foi possível localizar um objeto User com id "+id);
 		}
 	}
 
@@ -109,9 +111,12 @@ public class UserService implements UserDetailsService {
 		entity.setEmail(dto.getEmail());
 		entity.setUsername(dto.getUsername());
 		entity.getRoles().clear();
-		for (RoleDTO role : dto.getRoles()) {
-			Role r = roleRepo.getOne(role.getId());
-			entity.getRoles().add(r);
+		for (RoleDTO obj : dto.getRoles()) {
+			RoleDTO aux = roleService.findById(obj.getId());
+			Role role = new Role();
+			role.setId(aux.getId());
+			role.setAuthority(aux.getAuthority());
+			entity.getRoles().add(role);
 		}
 	}
 }

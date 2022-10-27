@@ -19,7 +19,6 @@ import com.hkprojects.bulletjournal.services.exceptions.UserAlreadyExistsExcepti
 @RestControllerAdvice
 public class ResourceExceptionHandler {
 	@ExceptionHandler(InvalidTokenException.class)
-	@ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE)
 	public ResponseEntity<StandardError> invalidToken(InvalidTokenException e, HttpServletRequest request){
 		StandardError err = new StandardError();
 		HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
@@ -32,7 +31,6 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(UsernameNotFoundException.class)
-	@ResponseStatus(code = HttpStatus.NOT_FOUND)
 	public ResponseEntity<StandardError> usernameNotFound(UsernameNotFoundException e, HttpServletRequest request){
 		StandardError err = new StandardError();
 		HttpStatus status = HttpStatus.NOT_FOUND;
@@ -45,7 +43,6 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(UserAlreadyExistsException.class)
-	@ResponseStatus(code = HttpStatus.CONFLICT)
 	public ResponseEntity<StandardError> userAlredyExists(UserAlreadyExistsException e, HttpServletRequest request){
 		StandardError err = new StandardError();
 		HttpStatus status = HttpStatus.CONFLICT;
@@ -58,7 +55,6 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(RestrictedUsernameException.class)
-	@ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
 	public ResponseEntity<StandardError> restrictedUsername(RestrictedUsernameException e, HttpServletRequest request){
 		StandardError err = new StandardError();
 		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
@@ -71,10 +67,9 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(DatabaseException.class)
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	public ResponseEntity<StandardError> databaseException(DatabaseException e, HttpServletRequest request){
 		StandardError err = new StandardError();
-		HttpStatus status = HttpStatus.BAD_REQUEST;
+		HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
 		err.setTimestamp(Instant.now());
 		err.setStatus(status.value());
 		err.setError("DB Exception");
