@@ -42,6 +42,16 @@ public class Todo implements Serializable {
 		this.done = done;
 		this.priority = priority;
 	}
+	
+	public Todo(Long id, String title, Instant createdAt, boolean done, String priority, User user) {
+		this.id = id;
+		this.title = title;
+		this.createdAt = createdAt;
+		this.done = done;
+		this.priority = priority;
+		this.user = user;
+	}
+
 
 	public Long getId() {
 		return id;

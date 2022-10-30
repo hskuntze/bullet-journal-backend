@@ -22,7 +22,7 @@ public class AuthService {
 			String username = SecurityContextHolder.getContext().getAuthentication().getName();
 			return userRepo.findByUsername(username);
 		} catch(Exception e) {
-			throw new UnauthorizedUserException("Usuário inválido " + e.getMessage());
+			throw new UnauthorizedUserException(e.getMessage());
 		}
 	}
 	

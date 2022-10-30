@@ -78,10 +78,12 @@ public class UserService implements UserDetailsService {
 		tokenRepo.save(tk);
 	}
 	
+	@Transactional(readOnly = true)
 	public VerificationToken getVerificationToken(String token) {
 		return tokenRepo.findByToken(token);
 	}
 	
+	@Transactional
 	public void saveRegisteredUser(User user) {
 		repository.save(user);
 	}
@@ -90,7 +92,7 @@ public class UserService implements UserDetailsService {
 		try {
 			repository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException("Erro na base de dados");
+			throw new DatabaseException("Erro na base de dados. Detalhes: "+e.getLocalizedMessage());
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("Não foi possível localizar um objeto User com id "+id);
 		}

@@ -60,11 +60,12 @@ public class User implements Serializable, UserDetails{
 	public User() {
 	}
 
-	public User(Long id, String username, String email, String password, boolean enabled) {
+	public User(Long id, String username, String email, String password, boolean enabled, Set<Role> roles) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.roles = roles;
 	}
 	
 	public User(UserDTO dto) {
@@ -179,6 +180,6 @@ public class User implements Serializable, UserDetails{
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return this.enabled;
 	}
 }
