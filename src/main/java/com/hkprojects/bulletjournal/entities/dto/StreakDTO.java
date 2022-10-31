@@ -1,6 +1,7 @@
 package com.hkprojects.bulletjournal.entities.dto;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 import com.hkprojects.bulletjournal.entities.Streak;
 
@@ -13,20 +14,24 @@ public class StreakDTO implements Serializable {
 	private Integer total;
 	private boolean disabled;
 	private boolean doneToday;
+	private Instant createdAt;
+	private String label;
 	
 	private UserDTO user;
 	
 	public StreakDTO() {
 	}
 
-	public StreakDTO(Long id, String title, Integer count, Integer total, boolean disabled, boolean doneToday, UserDTO user) {
+	public StreakDTO(Long id, String title, Integer count, Integer total, boolean disabled, boolean doneToday, Instant createdAt, String label, UserDTO user) {
 		this.id = id;
 		this.title = title;
 		this.count = count;
 		this.total = total;
 		this.disabled = disabled;
 		this.doneToday = doneToday;
+		this.createdAt = createdAt;
 		this.user = user;
+		this.label = label;
 	}
 	
 	public StreakDTO(Streak streak) {
@@ -37,6 +42,8 @@ public class StreakDTO implements Serializable {
 		disabled = streak.isDisabled();
 		doneToday = streak.isDoneToday();
 		user = new UserDTO(streak.getUser());
+		createdAt = streak.getCreatedAt();
+		label = streak.getLabel();
 	}
 
 	public Long getId() {
@@ -93,6 +100,22 @@ public class StreakDTO implements Serializable {
 
 	public void setUser(UserDTO user) {
 		this.user = user;
+	}
+
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	@Override

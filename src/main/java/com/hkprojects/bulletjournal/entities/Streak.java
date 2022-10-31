@@ -1,6 +1,7 @@
 package com.hkprojects.bulletjournal.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
@@ -24,6 +26,8 @@ public class Streak implements Serializable {
 	private Integer total;
 	private boolean disabled;
 	private boolean doneToday;
+	private Instant createdAt;
+	private String label;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -32,13 +36,14 @@ public class Streak implements Serializable {
 	public Streak() {
 	}
 
-	public Streak(Long id, String title, Integer count, Integer total, boolean disabled, boolean doneToday, User user) {
+	public Streak(Long id, String title, Integer count, Integer total, boolean disabled, boolean doneToday, String label, User user) {
 		this.id = id;
 		this.title = title;
 		this.count = count;
 		this.total = total;
 		this.disabled = disabled;
 		this.doneToday = doneToday;
+		this.label = label;
 		this.user = user;
 	}
 
@@ -98,6 +103,22 @@ public class Streak implements Serializable {
 		this.user = user;
 	}
 
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -114,10 +135,16 @@ public class Streak implements Serializable {
 		Streak other = (Streak) obj;
 		return Objects.equals(id, other.id);
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Streak [id=" + id + ", title=" + title + ", count=" + count + ", total=" + total + ", disabled="
-				+ disabled + ", doneToday=" + doneToday + ", user=" + user + "]";
+				+ disabled + ", doneToday=" + doneToday + ", createdAt=" + createdAt + ", label=" + label + ", user="
+				+ user + "]";
+	}
+
+	@PrePersist
+	public void createdAt() {
+		this.createdAt = Instant.now();
 	}
 }

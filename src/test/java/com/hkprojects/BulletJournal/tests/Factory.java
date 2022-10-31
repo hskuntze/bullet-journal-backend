@@ -35,7 +35,7 @@ public class Factory {
 	}
 	
 	public static Streak createStreak() {
-		return new Streak(1L, "Academia", 5, 20, false, false, createUser());
+		return new Streak(1L, "Academia", 5, 20, false, false, "dias", createUser());
 	}
 	
 	public static StreakDTO createStreakDTO() {
