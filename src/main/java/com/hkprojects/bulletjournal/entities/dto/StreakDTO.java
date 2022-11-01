@@ -13,25 +13,27 @@ public class StreakDTO implements Serializable {
 	private Integer count;
 	private Integer total;
 	private boolean disabled;
-	private boolean doneToday;
+	private Integer totalPerLabel;
 	private Instant createdAt;
 	private String label;
+	private Instant last;
 	
 	private UserDTO user;
 	
 	public StreakDTO() {
 	}
 
-	public StreakDTO(Long id, String title, Integer count, Integer total, boolean disabled, boolean doneToday, Instant createdAt, String label, UserDTO user) {
+	public StreakDTO(Long id, String title, Integer count, Integer total, boolean disabled, Integer totalPerLabel, Instant createdAt, String label, Instant last, UserDTO user) {
 		this.id = id;
 		this.title = title;
 		this.count = count;
 		this.total = total;
 		this.disabled = disabled;
-		this.doneToday = doneToday;
+		this.totalPerLabel = totalPerLabel;
 		this.createdAt = createdAt;
 		this.user = user;
 		this.label = label;
+		this.last = last;
 	}
 	
 	public StreakDTO(Streak streak) {
@@ -40,10 +42,11 @@ public class StreakDTO implements Serializable {
 		count = streak.getCount();
 		total = streak.getTotal();
 		disabled = streak.isDisabled();
-		doneToday = streak.isDoneToday();
 		user = new UserDTO(streak.getUser());
 		createdAt = streak.getCreatedAt();
 		label = streak.getLabel();
+		last = streak.getLast();
+		totalPerLabel = streak.getTotalPerLabel();
 	}
 
 	public Long getId() {
@@ -85,13 +88,13 @@ public class StreakDTO implements Serializable {
 	public void setDisabled(boolean disabled) {
 		this.disabled = disabled;
 	}
-
-	public boolean isDoneToday() {
-		return doneToday;
+	
+	public Integer getTotalPerLabel() {
+		return totalPerLabel;
 	}
 
-	public void setDoneToday(boolean doneToday) {
-		this.doneToday = doneToday;
+	public void setTotalPerLabel(Integer totalPerLabel) {
+		this.totalPerLabel = totalPerLabel;
 	}
 
 	public UserDTO getUser() {
@@ -118,9 +121,18 @@ public class StreakDTO implements Serializable {
 		this.label = label;
 	}
 
+	public Instant getLast() {
+		return last;
+	}
+
+	public void setLast(Instant last) {
+		this.last = last;
+	}
+
 	@Override
 	public String toString() {
 		return "StreakDTO [id=" + id + ", title=" + title + ", count=" + count + ", total=" + total + ", disabled="
-				+ disabled + ", doneToday=" + doneToday + ", user=" + user + "]";
+				+ disabled + ", totalPerLabel=" + totalPerLabel + ", createdAt=" + createdAt + ", label=" + label
+				+ ", last=" + last + ", user=" + user + "]";
 	}
 }

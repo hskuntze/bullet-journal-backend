@@ -84,8 +84,9 @@ public class StreakService {
 		entity.setTotal(dto.getTotal());
 		entity.setCount(dto.getCount());
 		entity.setDisabled(dto.isDisabled());
-		entity.setDoneToday(dto.isDoneToday());
+		entity.setTotalPerLabel(dto.getTotalPerLabel());
 		entity.setLabel(dto.getLabel());
+		entity.setLast(dto.getLast());
 		User u = userRepository.findById(authService.authenticated().getId()).get();
 		entity.setUser(u);
 	}

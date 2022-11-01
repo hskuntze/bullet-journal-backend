@@ -25,7 +25,8 @@ public class Streak implements Serializable {
 	private Integer count;
 	private Integer total;
 	private boolean disabled;
-	private boolean doneToday;
+	private Integer totalPerLabel;
+	private Instant last;
 	private Instant createdAt;
 	private String label;
 	
@@ -36,14 +37,15 @@ public class Streak implements Serializable {
 	public Streak() {
 	}
 
-	public Streak(Long id, String title, Integer count, Integer total, boolean disabled, boolean doneToday, String label, User user) {
+	public Streak(Long id, String title, Integer count, Integer total, boolean disabled, Integer totalPerLabel, String label, Instant last, User user) {
 		this.id = id;
 		this.title = title;
 		this.count = count;
 		this.total = total;
 		this.disabled = disabled;
-		this.doneToday = doneToday;
+		this.totalPerLabel = totalPerLabel;
 		this.label = label;
+		this.last = last;
 		this.user = user;
 	}
 
@@ -87,12 +89,12 @@ public class Streak implements Serializable {
 		this.disabled = disabled;
 	}
 
-	public boolean isDoneToday() {
-		return doneToday;
+	public Integer getTotalPerLabel() {
+		return totalPerLabel;
 	}
 
-	public void setDoneToday(boolean doneToday) {
-		this.doneToday = doneToday;
+	public void setTotalPerLabel(Integer totalPerLabel) {
+		this.totalPerLabel = totalPerLabel;
 	}
 
 	public User getUser() {
@@ -119,6 +121,14 @@ public class Streak implements Serializable {
 		this.label = label;
 	}
 
+	public Instant getLast() {
+		return last;
+	}
+
+	public void setLast(Instant last) {
+		this.last = last;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -135,12 +145,12 @@ public class Streak implements Serializable {
 		Streak other = (Streak) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Streak [id=" + id + ", title=" + title + ", count=" + count + ", total=" + total + ", disabled="
-				+ disabled + ", doneToday=" + doneToday + ", createdAt=" + createdAt + ", label=" + label + ", user="
-				+ user + "]";
+				+ disabled + ", totalPerLabel=" + totalPerLabel + ", last=" + last + ", createdAt=" + createdAt
+				+ ", label=" + label + ", user=" + user + "]";
 	}
 
 	@PrePersist
