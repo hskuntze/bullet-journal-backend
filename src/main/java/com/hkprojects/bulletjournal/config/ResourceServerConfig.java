@@ -29,7 +29,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Autowired
 	private JwtTokenStore store;
 	
-	private static final String[] SWAGGER = {"/swagger-ui/**", "/thebulletjournal-openapi/**"};
+	private static final String[] SWAGGER = {"/swagger-ui-custom.html", "/thebulletjournal-openapi/**", "/swagger-ui/**"};
 	private static final String[] PUBLIC = {"/oauth/token", "/h2-console/**"};
 	private static final String[] REGISTER = {"/users"};
 	private static final String[] USERS = {"/users/**"};
