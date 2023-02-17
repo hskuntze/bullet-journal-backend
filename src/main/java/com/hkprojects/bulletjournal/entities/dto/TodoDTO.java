@@ -37,7 +37,9 @@ public class TodoDTO implements Serializable {
 		done = todo.isDone();
 		priority = todo.getPriority();
 		user = new UserDTO(todo.getUser());
-		streak = new StreakTodoDTO(todo.getStreak());
+		if(todo.getStreak() != null) {
+			streak = new StreakTodoDTO(todo.getStreak());
+		}
 	}
 
 	public Long getId() {
