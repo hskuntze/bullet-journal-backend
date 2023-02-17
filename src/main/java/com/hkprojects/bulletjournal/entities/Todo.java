@@ -32,6 +32,10 @@ public class Todo implements Serializable {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
+	@ManyToOne
+	@JoinColumn(name = "streak_id")
+	private Streak streak;
+	
 	public Todo() {
 	}
 
@@ -99,6 +103,14 @@ public class Todo implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Streak getStreak() {
+		return streak;
+	}
+
+	public void setStreak(Streak streak) {
+		this.streak = streak;
 	}
 
 	@Override

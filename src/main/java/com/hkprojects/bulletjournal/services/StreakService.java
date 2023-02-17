@@ -51,6 +51,10 @@ public class StreakService {
 		return new StreakDTO(streak);
 	}
 	
+	public Streak findStreakById(Long id) {
+		return repository.findById(id).get();
+	}
+	
 	@Transactional
 	public StreakDTO insert(StreakDTO dto) {
 		Streak entity = new Streak();
@@ -65,6 +69,17 @@ public class StreakService {
 			Streak entity = repository.getOne(id);
 			dtoToEntity(dto, entity);
 			entity = repository.save(entity);
+			return new StreakDTO(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Não foi possível encontrar um Streak com id "+id+". Mais informações: "+e.getMessage());
+		}
+	}
+	
+	@Transactional
+	public StreakDTO updateCountByOne(Long id) {
+		try {
+			Streak entity = repository.getOne(id);
+			entity.setCount(entity.getCount() + 1);
 			return new StreakDTO(entity);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Não foi possível encontrar um Streak com id "+id+". Mais informações: "+e.getMessage());

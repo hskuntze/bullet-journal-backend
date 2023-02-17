@@ -16,6 +16,8 @@ public class TodoDTO implements Serializable {
 	
 	private UserDTO user;
 	
+	private StreakTodoDTO streak;
+	
 	public TodoDTO() {
 	}
 
@@ -35,6 +37,7 @@ public class TodoDTO implements Serializable {
 		done = todo.isDone();
 		priority = todo.getPriority();
 		user = new UserDTO(todo.getUser());
+		streak = new StreakTodoDTO(todo.getStreak());
 	}
 
 	public Long getId() {
@@ -83,6 +86,14 @@ public class TodoDTO implements Serializable {
 
 	public void setUser(UserDTO user) {
 		this.user = user;
+	}
+
+	public StreakTodoDTO getStreak() {
+		return streak;
+	}
+
+	public void setStreak(StreakTodoDTO streak) {
+		this.streak = streak;
 	}
 
 	@Override

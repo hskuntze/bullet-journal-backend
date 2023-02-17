@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hkprojects.bulletjournal.entities.Streak;
 import com.hkprojects.bulletjournal.entities.Todo;
 import com.hkprojects.bulletjournal.entities.User;
 import com.hkprojects.bulletjournal.entities.dto.TodoDTO;
@@ -26,6 +27,9 @@ public class TodoService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private StreakService streakService;
 	
 	@Autowired
 	private AuthService authService;
@@ -82,7 +86,17 @@ public class TodoService {
 		entity.setTitle(dto.getTitle());
 		entity.setDone(dto.isDone());
 		entity.setPriority(dto.getPriority());
+		
 		User u = userRepository.findById(authService.authenticated().getId()).get();
 		entity.setUser(u);
+		
+		if(dto.getStreak() != null) {
+			Streak st = setStreakTodoAttr(dto);
+			entity.setStreak(st);
+		}
+	}
+	
+	private Streak setStreakTodoAttr(TodoDTO dto) {
+		return streakService.findStreakById(dto.getStreak().getId());
 	}
 }

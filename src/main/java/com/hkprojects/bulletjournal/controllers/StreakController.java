@@ -72,6 +72,14 @@ public class StreakController {
 	public ResponseEntity<StreakDTO> update(@PathVariable Long id, @RequestBody StreakDTO dto) {
 		return ResponseEntity.ok().body(service.update(id, dto));
 	}
+	
+	@PutMapping(value = "/updateCount/{id}")
+	@Operation(tags = { "/streaks" }, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {
+			@Content(schema = @Schema(implementation = StreakSchema.class)) }, description = "Objeto de entrada para atualizar o contador, em 1 unidade, de um Streak específico no sistema", required = true), parameters = {
+					@Parameter(name = "id", description = "Id de um objeto Streak", example = "1") })
+	public ResponseEntity<StreakDTO> updateCountByOne(@PathVariable Long id) {
+		return ResponseEntity.ok().body(service.updateCountByOne(id));
+	}
 
 	@DeleteMapping(value = "/{id}")
 	@Operation(tags = { "/streaks" }, parameters = {

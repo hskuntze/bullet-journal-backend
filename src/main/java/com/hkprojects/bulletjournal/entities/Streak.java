@@ -2,6 +2,8 @@ package com.hkprojects.bulletjournal.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
@@ -33,6 +36,9 @@ public class Streak implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+	
+	@OneToMany(mappedBy = "streak")
+	private List<Todo> todos = new ArrayList<>();
 	
 	public Streak() {
 	}
@@ -127,6 +133,14 @@ public class Streak implements Serializable {
 
 	public void setLast(Instant last) {
 		this.last = last;
+	}
+
+	public List<Todo> getTodos() {
+		return todos;
+	}
+
+	public void setTodos(List<Todo> todos) {
+		this.todos = todos;
 	}
 
 	@Override
